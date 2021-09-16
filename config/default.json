@@ -1,5 +1,5 @@
 {
-  "port": 5000,
+  "port": 80,
   "jwtSecret": "Dkfl",
   "mongoUri": "mongodb://localhost:27017/link",
   "email": "test1@yandex.ru",
