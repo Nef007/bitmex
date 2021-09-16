@@ -2,7 +2,7 @@ import React, {Suspense} from 'react';
 import ReactDOM from 'react-dom';
 //import 'normalize.css';
 import 'antd/dist/antd.css'
-import "./App.scss"
+import "./App.css"
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {Provider} from "react-redux";

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {connect} from "react-redux";
-import './Admin.scss'
 import 'moment/locale/ru';
 import {useHistory} from "react-router-dom";
 import {logout, reset} from "./redux/auth-reducer";
