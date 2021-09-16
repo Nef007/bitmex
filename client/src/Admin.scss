@@ -1,0 +1,186 @@
+
+
+//Admin
+
+.admin {
+  background-color: #fff;
+  padding: 5px 0 1.8em 0;
+}
+
+.admin > div {
+  text-align: left;
+  margin: 0em auto;
+  padding: 5px 10px;
+  width: 760px;
+}
+
+
+.admin textarea {
+  background-color: #ffface;
+  width: 100%;
+  max-width: 100%;
+  font-size: 0.9rem;
+  font-family: "Lucida Console", Monaco, monospace;
+  height: 50px;
+  margin-bottom: 1em;
+  border: 2px solid #e5c78c;
+  box-shadow: none;
+}
+
+#note_link_input {
+  background-color: #ffa;
+  font-weight: bold;
+}
+
+
+.link{
+
+  border: 2px solid #e5c78c;
+  font-size: 14px;
+
+}
+.btn_admin{
+  width: 100%;
+}
+.center{
+  display: block;
+  margin: 10px auto ;
+  text-align: center;
+}
+.right{
+  display: block;
+  float: right ;
+
+}
+.green{
+  color: green;
+}
+.red{
+  color: #bf0d0d;
+}
+.mgl10{
+  margin-left: 10px;
+}
+.success{
+  display: block;
+  font-size: 0.8rem;
+  font-style: italic;
+  font-weight: normal;
+  margin-top: -1px;
+  padding: 0.33333rem 0.5rem 0.5rem;
+  padding-top: 0.33333rem;
+  padding-right: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.5rem;
+  background: #F9D15F;
+  color: #000;
+  background-color: #66cc99;
+}
+
+@media only screen and (max-width: 778px) {
+  .col {
+    margin: 0 0 0.8em 0;
+  }
+  .span_1_of_6, .span_2_of_6, .span_3_of_6, .span_4_of_6, .span_5_of_6, .span_6_of_6 {
+    width: 100%;
+  }
+
+  #nav .span_1_of_6 {
+    width: 50%;
+  }
+
+  .col .button,
+  .col .primary_button,
+  .col .small_button
+  {
+    font-size: 1rem;
+  }
+
+  .help_block {
+    font-size: 0.9em;
+  }
+
+
+  input[type="checkbox"] {
+    zoom: 1;
+  }
+
+  #header {
+    width: auto;
+    height: auto;
+    padding: 5px 10px;
+  }
+
+  #header_bg {
+    border-bottom: 0px solid #f1f1f1;
+  }
+
+  #header h1 {
+    float: none;
+    width: auto;
+  }
+
+  #header h1 img {
+    height: 40px;
+  }
+
+  #header h2 {
+    display: none;
+  }
+
+  #ad {
+    padding: 15px 0 5px 0;
+    width: auto;
+  }
+
+  #top_banner,
+  #bottom_banner {
+    width: auto;
+    font-size: 0.75em;
+  }
+
+  #unsupported {
+    width: auto;
+  }
+
+  #content {
+    padding-bottom: 1rem;
+  }
+
+  #content > div {
+    width: auto;
+  }
+  .admin > div {
+    width: auto;
+  }
+
+  #content h3 {
+    margin-top: 0;
+  }
+
+  #content textarea {
+    height: 150px;
+  }
+
+  #note_link {
+    font-size: 0.9em;
+  }
+
+  #footer {
+    font-size: 0.9rem;
+  }
+
+  #footer > div {
+    width: auto;
+    margin-top: 0;
+  }
+
+  #footer .col {
+    margin-bottom: 0.8em;
+    line-height: 1.7rem;
+  }
+
+  #footer #nav {
+    margin-bottom: 0;
+  }
+}
