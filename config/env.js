@@ -1,7 +1,7 @@
 const env = {
     database: 'bitmex',
     username: 'root',
-    password: '12345678',
+    password: '',
     host: 'localhost',
     dialect: 'mysql',
     pool: {

@@ -16,7 +16,7 @@ const qs = require('qs');
 
 const app = express()
 app.use(express.json({extended: true}))
-db.sequelize.sync({force: true}).then(() => {
+db.sequelize.sync({force: false}).then(() => {
     console.log('Drop and Resync with { force: false }');
 });
 app.use('/auth', require('./routes/auth.routes'))
