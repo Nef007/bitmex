@@ -69,36 +69,27 @@ async function makeRequest(apiKey, apiSecret, verb, endpoint, data = {}) {
 router.post('/create', async (req, res) => {
     try {
 
-        let balance
+
         let userBit
-        let wallet
 
         const {toorid, ...user} = req.body
 
         const toor = await Toor.findByPk(toorid)
 
         try {
-             wallet = await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
-                {currency: "XBt"}
-            );
+
             userBit = await makeRequest(user.apikey, user.apisecret, 'GET', '/user',
                 {}
             );
 
 
-            balance = parseInt(wallet.amount / 10000)/10000
-
-
         } catch (e) {
 
-            console.log(e)
+
             return res.status(400).json({message: 'Ошибка получения данных c BitMex'})
         }
 
-        if (balance !== Number(toor.balance) ) {
 
-            return res.status(400).json({message: `Не соответствует баланс(Ваш:${balance} Турнир: ${toor.balance} BitMex: ${wallet.amount}`})
-        }
 
         const repit = await User.findAll({
             where: {
