@@ -101,7 +101,28 @@ export const TableTur = (props) => {
                                             }
 
                                     />
-                                    <Column title="Комментарий" dataIndex="comment" key="comment"/>
+                                    <Column title="Комментарий" dataIndex="comment" key="comment"
+                                            render={(text, record) => {
+
+                                                if(text==="Обновлен:"){
+                                                    return (
+                                                        <>
+                                                            <span> Обновлен: {moment(record.updatedAt).format("HH:mm DD.MM.YYYY")} </span>
+                                                        </>
+
+                                                    )
+                                                }else return (
+                                                    <span> {text}</span>
+
+                                                )
+
+
+
+                                            }
+
+                                            }
+
+                                    />
                                 </Table>
 
                                 <h2>Роботы</h2>
@@ -155,7 +176,28 @@ export const TableTur = (props) => {
                                             }
 
                                     />
-                                    <Column title="Комментарий" dataIndex="comment" key="comment"/>
+                                    <Column title="Комментарий" dataIndex="comment" key="comment"
+                                            render={(text, record) => {
+
+                                                if(text==="Обновлен:"){
+                                                    return (
+                                                        <>
+                                                            <span> Обновлен: {moment(record.updatedAt).format("HH:mm DD.MM.YYYY")} </span>
+                                                        </>
+
+                                                    )
+                                                }else return (
+                                                    <span> {text}</span>
+
+                                                )
+
+
+
+                                            }
+
+                                            }
+
+                                    />
 
 
                                 </Table>
