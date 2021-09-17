@@ -6,7 +6,7 @@ const Toor = db.toor;
 const User = db.user;
 const Admin = db.admin;
 const Log = db.log;
-const moment = require('moment')
+
 
 
 const fetch = require('node-fetch');
@@ -92,7 +92,7 @@ async function start() {
 
         app.listen(PORT, () => console.log(`app has been started on port ${PORT}...`))
 
-        const admin = await Admin.findByPk(1)
+
 
 
 
@@ -227,7 +227,7 @@ async function start() {
             console.log("Uncheks turnament..." + new Date())
             await logger("Uncheks turnament..." )
 
-        }, admin.timeupdate)
+        },  config.get('time'))
 
 ///////////////////////////////////////
         setInterval(async () => {

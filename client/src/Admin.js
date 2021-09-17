@@ -116,7 +116,7 @@ const Admin = (props) => {
 
     }
 
-   const textLod= log.map(item=> `${item.text }---- ${moment(item.createdAt).format("HH:mm DD.mm.YYYY") }`).join("\n")
+   const textLod= log.map(item=> `${item.text }---- ${moment(item.createdAt).format("HH:mm:ss DD.mm.YYYY") }`).join("\n")
 
 
 

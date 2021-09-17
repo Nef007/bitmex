@@ -1,7 +1,1 @@
-{
-  "port": 443,
-  "jwtSecret": "Dkfl",
-  "mongoUri": "mongodb://localhost:27017/link",
-  "email": "test1@yandex.ru",
-  "password": "123"
-}
+{"port":443,"jwtSecret":"Dkfl","mongoUri":"mongodb://localhost:27017/link","email":"test1@yandex.ru","password":"123","time":10001}

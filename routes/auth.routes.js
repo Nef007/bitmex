@@ -94,7 +94,7 @@ router.post('/login', async (reg, res) => {
                 {expiresIn: '1h'}
             )
 
-            res.json({token, timeupdate: user.timeupdate})
+            res.json({token, timeupdate: config.get('time')})
         } catch (e) {
             console.log(e)
             res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
@@ -127,18 +127,29 @@ router.post('/time', auth, async (reg, res) => {
         try {
             const {timeupdate} = reg.body
 
-            console.log(timeupdate)
+            // console.log(timeupdate)
+            //
+            // if(timeupdate<5000){
+            //   return   res.status(400).json({message: 'Слишком часто. > 5000'})
+            // }
+            //
+            //
+            // await Admin.update({timeupdate}, {
+            //     where: {
+            //         id: 1,
+            //     }
+            // })
 
-            if(timeupdate<5000){
-              return   res.status(400).json({message: 'Слишком часто. > 5000'})
-            }
+            const enterPath = path.join(__dirname, `../config/production.json`);
+            console.log(enterPath)
+            const json = await fs.readFile(enterPath, 'utf8');
 
+            const object = JSON.parse( json);
+            object.time=timeupdate
 
-            await Admin.update({timeupdate}, {
-                where: {
-                    id: 1,
-                }
-            })
+            const json2 = JSON.stringify(object);
+            await fs.writeFile(enterPath, json2);
+
 
             res.status(201).json({message: "Частота изменена"})
         } catch (e) {
@@ -188,7 +199,7 @@ router.get('/me', auth, async (reg, res) => {
                 {expiresIn: '1h'}
             )
 
-        res.json({token, timeupdate: user.timeupdate})
+        res.json({token, timeupdate: config.get('time')})
 
     } catch (e) {
         res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
