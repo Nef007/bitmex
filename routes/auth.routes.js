@@ -11,14 +11,7 @@ const Admin = db.admin;
 
 const auth = require('../middleware/auth.middleware')
 
-router.post(
-    '/register',
-    // [
-    //     check('email', 'Некоректный email').isEmail(),
-    //     check('password', 'Минимальная длина пароля 6 символов')
-    //         .isLength({min: 6 })
-    // ],
-    async (reg, res) => {
+router.post('/register', async (reg, res) => {
         try {
 
 
@@ -61,10 +54,7 @@ router.post(
 
     })
 // /api/auth/login
-router.post('/login',
-
-
-    async (reg, res) => {
+router.post('/login', async (reg, res) => {
         try {
 
             const {email, password} = reg.body
@@ -104,16 +94,14 @@ router.post('/login',
                 {expiresIn: '1h'}
             )
 
-            res.json({token})
+            res.json({token, timeupdate: user.timeupdate})
         } catch (e) {
             console.log(e)
             res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
         }
 
     })
-router.post('/reset', auth,
-
-    async (reg, res) => {
+router.post('/reset', auth, async (reg, res) => {
         try {
             const {password, confirm} = reg.body
 
@@ -130,6 +118,29 @@ router.post('/reset', auth,
             })
 
             res.status(201).json({message: "Пароль изменен"})
+        } catch (e) {
+            res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
+        }
+
+    })
+router.post('/time', auth, async (reg, res) => {
+        try {
+            const {timeupdate} = reg.body
+
+            console.log(timeupdate)
+
+            if(timeupdate<5000){
+              return   res.status(400).json({message: 'Слишком часто. > 5000'})
+            }
+
+
+            await Admin.update({timeupdate}, {
+                where: {
+                    id: 1,
+                }
+            })
+
+            res.status(201).json({message: "Частота изменена"})
         } catch (e) {
             res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
         }
@@ -177,7 +188,7 @@ router.get('/me', auth, async (reg, res) => {
                 {expiresIn: '1h'}
             )
 
-        res.json({token})
+        res.json({token, timeupdate: user.timeupdate})
 
     } catch (e) {
         res.status(500).json({message: 'Что то пошло не так попробуйте снова'})

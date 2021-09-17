@@ -45,6 +45,11 @@ export const authAPI = {
             Authorization: `Bearer ${token}`
         } )
     },
+    timeSet(form, token){
+        return   request('/auth/time', 'POST', {...form}, {
+            Authorization: `Bearer ${token}`
+        } )
+    },
     isAdmin(){
 
         return   request('/auth/isadmin', 'GET' )
@@ -101,6 +106,19 @@ export const bitAPI = {
     },
     getAdmin(token) {
         return  request('/api/user/admin', 'GET', null, {
+            Authorization: `Bearer ${token}`
+        } )
+
+    },
+
+    getLog(token) {
+        return  request('/api/user/log', 'GET', null, {
+            Authorization: `Bearer ${token}`
+        } )
+
+    },
+    delLog(token) {
+        return  request('/api/user/log/del', 'DELETE', null, {
             Authorization: `Bearer ${token}`
         } )
 

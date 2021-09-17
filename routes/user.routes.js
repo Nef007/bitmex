@@ -7,6 +7,7 @@ const router = Router()
 const db = require('../config/db.config.js');
 const User = db.user;
 const Toor = db.toor;
+const Log = db.log;
 const { Op } = require("sequelize");
 
 const fetch = require('node-fetch');
@@ -170,8 +171,9 @@ router.get('/admin', auth, async (req, res) => {
 
                     user.balance = parseInt(wallet.amount / 10000)/10000
                     user.trade = order.length
-                    let transaction = String(positionBit.map(item => `${item.symbol}: ${item.openingQty}`)  || '')
+                    user.transaction = String(positionBit.map(item => `${item.symbol}: ${item.openingQty}/${item.avgEntryPrice}/${item.liquidationPrice}`)  || '')
                     user.api = api.length
+
                 } catch (e) {
                     if (e.code === 403) {
                         user.balance = "H/В"
@@ -257,6 +259,35 @@ router.put('/active/:id', auth, async (req, res) => {
         })
 
         res.status(201).json({message: 'Пользователь активирован'})
+
+
+    } catch (e) {
+        res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
+    }
+
+})
+router.get('/log', auth, async (req, res) => {
+    try {
+
+
+      const logs= await Log.findAll({raw: true})
+
+        res.status(201).json(logs)
+
+
+    } catch (e) {
+        res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
+    }
+
+})
+router.delete('/log/del', auth, async (req, res) => {
+    try {
+
+      await Log.destroy({
+          where: {},
+          truncate: true})
+
+        res.status(201).json({message: 'Лог отчищен'})
 
 
     } catch (e) {

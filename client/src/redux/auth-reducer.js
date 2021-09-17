@@ -149,6 +149,23 @@ export const reset = (form) => async (dispatch) => {
     }
 
 }
+
+export const setTimeUpdate = (form) => async (dispatch) => {
+    dispatch(deleteMessage());
+    try {
+        dispatch(setLoading(true))
+
+       const data = await authAPI.timeSet(form, localStorage.getItem(storageName))
+        dispatch(setLoading(false))
+        dispatch(setMessage(data.message, 'success'));
+
+    } catch (e) {
+        dispatch(noAutorization(e.message))
+        dispatch(setLoading(false))
+        dispatch(setMessage(e.message, 'error'));
+    }
+
+}
 export const isEmptyAdmin = () => async (dispatch) => {
 
     try {

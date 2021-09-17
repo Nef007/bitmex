@@ -15,6 +15,12 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
 
+        },
+        timeupdate: {
+            type: Sequelize.INTEGER,
+            defaultValue: 10000,
+
+
         }
     });
 
