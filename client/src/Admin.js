@@ -38,8 +38,8 @@ const Admin = (props) => {
         arr, deleteUser, disqvalUser, reset,   setTimeUpdate, getLog, setActiveUser, currentUser
     } = props
     const history = useHistory();
-    useEffect(  () => {
-        getToors()
+    useEffect(  async () => {
+       await getToors()
         getUserAdmin()
         getLog()
 
@@ -102,8 +102,8 @@ const Admin = (props) => {
 
     }
 
-    const onUpdateToor = () => {
-        getToors()
+    const onUpdateToor = async () => {
+       await getToors()
         getUserAdmin()
     }
     const ondeleteLog = async () => {
