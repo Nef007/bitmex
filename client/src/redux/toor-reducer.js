@@ -1,4 +1,4 @@
-import {bitAPI, linkAPI} from "../api/api";
+import {bitAPI} from "../api/api";
 import {deleteMessage, noAutorization, setLoading, setMessage} from "./auth-reducer";
 
 const SET_TOOR= 'SET_TOOR'

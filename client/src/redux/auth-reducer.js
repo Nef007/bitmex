@@ -87,8 +87,10 @@ export const login = (form) => async (dispatch) => {
 
         dispatch(setLoading(true))
         const data = await authAPI.login(form)
-        dispatch(setUserData(data))
         localStorage.setItem(storageName, data.token)
+        dispatch(setUserData(data))
+
+
         dispatch(setLoading(false))
 
     } catch (e) {
@@ -123,7 +125,7 @@ export const register = (form) => async (dispatch) => {
     try {
         dispatch(setLoading(true))
 
-        const data = await authAPI.register(form)
+        await authAPI.register(form)
         dispatch(setLoading(false))
         dispatch(setIsAdmin(true))
 

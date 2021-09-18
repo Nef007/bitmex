@@ -1,9 +1,8 @@
 
 import React, {useEffect} from "react";
 import {connect} from "react-redux";
-import {} from "./redux/user-reducer";
 import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom'
-import { Button, Dropdown, Layout, Menu, message } from "antd";
+import {  message } from "antd";
 import { LoopCircleLoading } from 'react-loadingg';
 
 import Admin from "./Admin";
@@ -28,7 +27,7 @@ function App({info, isAuth, initializedApp, initialized}) {
     useEffect(() => {
         initializedApp()
 
-    }, [])
+    }, [initializedApp])
 
     if (!initialized) {
 

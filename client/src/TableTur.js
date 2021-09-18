@@ -6,25 +6,20 @@ import {isEmpty} from "lodash";
 import logo from "./img/toor.png"
 
 
-const {Column, ColumnGroup} = Table;
+const {Column} = Table;
 
 
 export const TableTur = (props) => {
 
     const {
-        getUser, users, loading, toors, getToors, arr, setIntervalState, intervalUser, intervalUserAdmin, intervalToor
+        getUser, loading, toors, getToors, arr
     } = props
 
     useEffect(async () => {
         await getToors()
         getUser()
-        clearInterval(intervalUser)
-        setIntervalState(setInterval(async () =>{
-            await getToors()
-            getUser()
-        }, 10000))
 
-    }, [])
+    }, [getToors, getUser])
 
 
     const onUpdate = () => {
@@ -50,7 +45,7 @@ export const TableTur = (props) => {
                             const bot = toor.users && toor.users.filter(user => user.category === "bot")
 
                             return (
-                                <>
+                                <React.Fragment>
                                     <Button onClick={onUpdate} type="primary">Обновить</Button>
                                     <h2>Люди</h2>
                                     <Table dataSource={humans} loading={loading}>
@@ -70,11 +65,11 @@ export const TableTur = (props) => {
                                                 render={text => {
 
 
-
                                                     return (
                                                         <>
                                                             {/*{text.map(item=> <div>{item.map(i=> <span>{i} </span>)}</div>)}*/}
-                                                            {text && text.split(',').map(item=> <div className="position">{item}</div>)}
+                                                            {text && text.split(',').map((item, index) => <div
+                                                                key={index} className="position">{item}</div>)}
 
 
                                                         </>
@@ -106,18 +101,17 @@ export const TableTur = (props) => {
                                         <Column title="Комментарий" dataIndex="comment" key="comment"
                                                 render={(text, record) => {
 
-                                                    if(text==="Обновлен:"){
+                                                    if (text === "Обновлен:") {
                                                         return (
                                                             <>
                                                                 <span> Обновлен: {moment(record.updatedAt).format("HH:mm DD.MM.YYYY")} </span>
                                                             </>
 
                                                         )
-                                                    }else return (
+                                                    } else return (
                                                         <span> {text}</span>
 
                                                     )
-
 
 
                                                 }
@@ -145,11 +139,11 @@ export const TableTur = (props) => {
                                                 render={text => {
 
 
-
                                                     return (
                                                         <>
                                                             {/*{text.map(item=> <div>{item.map(i=> <span>{i} </span>)}</div>)}*/}
-                                                            {text && text.split(',').map(item=> <div className="position">{item}</div>)}
+                                                            {text && text.split(',').map((item, index) => <div
+                                                                key={index} className="position">{item}</div>)}
 
 
                                                         </>
@@ -181,18 +175,17 @@ export const TableTur = (props) => {
                                         <Column title="Комментарий" dataIndex="comment" key="comment"
                                                 render={(text, record) => {
 
-                                                    if(text==="Обновлен:"){
+                                                    if (text === "Обновлен:") {
                                                         return (
                                                             <>
                                                                 <span> Обновлен: {moment(record.updatedAt).format("HH:mm DD.MM.YYYY")} </span>
                                                             </>
 
                                                         )
-                                                    }else return (
+                                                    } else return (
                                                         <span> {text}</span>
 
                                                     )
-
 
 
                                                 }
@@ -204,7 +197,7 @@ export const TableTur = (props) => {
 
                                     </Table>
 
-                                </>
+                                </React.Fragment>
                             )
 
 
@@ -216,7 +209,8 @@ export const TableTur = (props) => {
                     >
                         <Column title="Название" dataIndex="name" key="name"/>
                         <Column showSorterTooltip={false} defaultSortOrder='ascend'
-                                sorter={(a, b) => new Date(b.start) - new Date(a.start)} title="Начало" dataIndex="start"
+                                sorter={(a, b) => new Date(b.start) - new Date(a.start)} title="Начало"
+                                dataIndex="start"
                                 key="start"
                                 render={(start) => {
                                     return (

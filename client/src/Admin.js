@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 import {connect} from "react-redux";
 import {useHistory} from "react-router-dom";
 import {auth, logout, reset, setTimeUpdate} from "./redux/auth-reducer";
-import {Button, Collapse, DatePicker, Form, Input, InputNumber, Modal, Table, Tabs, Tag} from "antd";
+import {Button,  DatePicker, Form, Input, InputNumber, Modal, Table, Tabs, Tag} from "antd";
 
 import locale from "antd/es/date-picker/locale/ru_RU";
 import {
@@ -22,9 +22,8 @@ import logo from "./img/toor.png";
 import {deleteLog, getLog} from "./redux/user-reducer";
 
 
-const {Column, ColumnGroup} = Table;
+const {Column} = Table;
 const {TabPane} = Tabs;
-const {Panel} = Collapse;
 const {RangePicker} = DatePicker;
 
 
@@ -36,19 +35,19 @@ const Admin = (props) => {
 
     const {
         logout, deleteLog, log, getUserAdmin, registerTurnament, getToors, toors, deleteToor, loading, auth,
-        arr, deleteUser, disqvalUser, reset, setIntervalState, intervalUser, setTimeUpdate, getLog, setActiveUser, currentUser
+        arr, deleteUser, disqvalUser, reset,   setTimeUpdate, getLog, setActiveUser, currentUser
     } = props
     const history = useHistory();
-    useEffect(async () => {
-      await  getToors()
+    useEffect(  () => {
+        getToors()
         getUserAdmin()
         getLog()
-        clearInterval(intervalUser)
+
        // setIntervalState(null, setInterval(()=> getUserAdmin(), 60000), setInterval(()=> getToors(), 60000))
 
 
         ///интервал
-    }, [])
+    }, [getToors, getLog, getUserAdmin])
 
     const [active, setActive] = useState(false)
 
@@ -103,8 +102,8 @@ const Admin = (props) => {
 
     }
 
-    const onUpdateToor = async () => {
-        await  getToors()
+    const onUpdateToor = () => {
+        getToors()
         getUserAdmin()
     }
     const ondeleteLog = async () => {
@@ -216,7 +215,7 @@ const Admin = (props) => {
                                                 const bot = toor.users && toor.users.filter(user=> user.category==="bot")
 
                                                 return(
-                                                    <>
+                                                    <React.Fragment key={toor.id}>
                                                         <Button onClick={onUpdate} type="primary" >Обновить</Button>
                                                         <h2>Люди</h2>
                                                         <Table dataSource={humans} loading={loading}>
@@ -240,7 +239,7 @@ const Admin = (props) => {
                                                                         return (
                                                                             <>
                                                                                 {/*{text.map(item=> <div>{item.map(i=> <span>{i} </span>)}</div>)}*/}
-                                                                                {text && text.split(',').map(item=> <div className="position">{item}</div>)}
+                                                                                {text && text.split(',').map((item, index)=> <div key={index} className="position">{item}</div>)}
 
 
                                                                             </>
@@ -297,9 +296,9 @@ const Admin = (props) => {
 
                                                                         return (
                                                                             <>
-                                                                                <a onClick={event => onDeleteUser(record.id)} >
+                                                                                <a  onClick={event => onDeleteUser(record.id)} >
                                                                                     Удалить
-                                                                                </a> <a onClick={event => onDisqvaleUser(record.id)} >
+                                                                                </a> <a  onClick={event => onDisqvaleUser(record.id)} >
                                                                                 Исключить
                                                                             </a> <a onClick={event => onActive(record.id)} >
                                                                                 Активировать
@@ -336,7 +335,7 @@ const Admin = (props) => {
                                                                         return (
                                                                             <>
                                                                                 {/*{text.map(item=> <div>{item.map(i=> <span>{i} </span>)}</div>)}*/}
-                                                                                {text && text.split(',').map(item=> <div className="position">{item}</div>)}
+                                                                                {text && text.split(',').map((item, index)=> <div key={index} className="position">{item}</div>)}
 
 
                                                                             </>
@@ -407,7 +406,7 @@ const Admin = (props) => {
 
                                                         </Table>
 
-                                                    </>
+                                                    </React.Fragment>
                                                 )
 
 
@@ -448,6 +447,7 @@ const Admin = (props) => {
                                                     }
                                             />
                                             <Column title="Стартовый депозит" dataIndex="balance" key="balance"/>
+                                            <Column title="Оборот" dataIndex="turn" key="turn"/>
                                             <Column title="Статус" dataIndex="status" key="status"
                                                     render={(status) => {
 

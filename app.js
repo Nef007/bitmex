@@ -4,7 +4,6 @@ const path = require('path')
 const db = require('./config/db.config');
 const Toor = db.toor;
 const User = db.user;
-const Admin = db.admin;
 const Log = db.log;
 
 
@@ -108,7 +107,7 @@ async function start() {
 
 
         setInterval(async () => {
-            console.log("Cheks turnament..." + new Date())
+
             await logger("Cheks turnament...")
             const toors = await Toor.findAll({
                 raw: true
@@ -118,7 +117,7 @@ async function start() {
 
                 //  проверка во время тура
                 if (toor.status === "Активный") {
-                    console.log("check toor id: " + toor.id )
+
                     await logger(`Cheks turnament id: ${toor.id}`)
 
                     const users = await User.findAll({
@@ -191,7 +190,7 @@ async function start() {
 
                             } catch (e) {
                                 if (e.code === 429) {
-                                    console.log(e)
+
                                     await logger(e)
                                 }
                                 if (e.code === 403) {
@@ -206,7 +205,7 @@ async function start() {
 
                                 }
 
-                                console.log(e)
+
                                 await logger(e)
 
 
@@ -216,7 +215,7 @@ async function start() {
 
                     }
 
-                    console.log("uncheck toor id: " + toor.id )
+
                     await logger(`uncheck turnament id: ${toor.id}`)
                 }  // конец проверки во время тура
                 // конец тура
@@ -224,7 +223,7 @@ async function start() {
 
             }
 
-            console.log("Uncheks turnament..." + new Date())
+
             await logger("Uncheks turnament..." )
 
         },  config.get('time'))
@@ -244,7 +243,7 @@ async function start() {
 
 
                     // активировали тур
-                    console.log(`Start active turnament ` + toor.id + " " + new Date() )
+
                     await logger(`Start active turnament ${toor.id}`)
                     await Toor.update({status: 'Активный'}, {
                         where: {
@@ -285,19 +284,19 @@ async function start() {
                                // console.log({...walletSum.filter(item => item.transactType === "Deposit")})
 
                                 //Проверка баланса
-                                let balance = parseInt(wallet.amount / 10000) / 10000
+                                // let balance = parseInt(wallet.amount / 10000) / 10000
+                                //
+                                // if (balance !== Number(toor.balance)) {
+                                //     await User.update({
+                                //         status: 'Исключен',
+                                //         comment: "Стартовый баланс не соответствует"
+                                //     }, {
+                                //         where: {
+                                //             id: user.id
+                                //         }
+                                //     })
 
-                                if (balance !== Number(toor.balance)) {
-                                    await User.update({
-                                        status: 'Исключен',
-                                        comment: "Стартовый баланс не соответствует"
-                                    }, {
-                                        where: {
-                                            id: user.id
-                                        }
-                                    })
-
-                                } else {
+                                // } else {
                                     //  сохранения депозита
 
                                     let transaction = String(positionBit.map(item => `${item.symbol}: ${item.openingQty}`)  || [])
@@ -321,7 +320,7 @@ async function start() {
                                         }
                                     })
 
-                                }
+                                // }
 
 
                             } catch (e) {
@@ -356,7 +355,7 @@ async function start() {
 
                                 }
 
-                                console.log(e)
+
                                 await logger(e)
 
                             }
@@ -366,7 +365,7 @@ async function start() {
 
                     }
 
-                    console.log("Finish active turnament.")
+
                     await logger(`Finish active turnament ${toor.id}`)
 
                 }  // конец активации тура
@@ -374,7 +373,6 @@ async function start() {
 
                 // конец тура
                 if (new Date(toor.end) <= new Date() && toor.status === "Активный") {
-                    console.log(`Close turnament ${new Date()}`)
                     await logger(`Close turnament ${toor.id}`)
                     // закрыли тур тур
                     await Toor.update({status: 'Завершен'}, {
@@ -461,7 +459,7 @@ async function start() {
                     }
 
 
-                    console.log("Finish close turnament")
+
                     await logger(`Finish close turnament ${toor.id}`)
 
                 }
@@ -473,7 +471,7 @@ async function start() {
 
 
     } catch (e) {
-        console.log('Server Error', e.message)
+
         process.exit(1)
     }
 

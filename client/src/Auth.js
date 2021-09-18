@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {useEffect, useState} from 'react';
 import {connect} from "react-redux";
-import {initializedApp, isEmptyAdmin, login, register} from "./redux/auth-reducer";
+import { isEmptyAdmin, login, register} from "./redux/auth-reducer";
 import {Button, Form, Input} from "antd";
 import { LoopCircleLoading } from 'react-loadingg';
 
@@ -10,24 +10,15 @@ import { LoopCircleLoading } from 'react-loadingg';
 const Auth = (props) => {
 
     const {
-         login, loading, message, isAdmin, register, isEmptyAdmin
+         login, loading,  isAdmin, register, isEmptyAdmin
     } = props
 
 
-    const [formAuth, setFormAuth] = useState({
-        email: "",
-        password: ""
-    })
 
     useEffect( () => {
         isEmptyAdmin()
-    },[])
+    },[isEmptyAdmin])
 
-
-    function onChangeForm(e) {
-        const {name, value} = e.target;
-        setFormAuth({...formAuth, [name]: value})
-    }
 
 
 const onRegister=(value)=>{

@@ -101,10 +101,29 @@ router.post('/create', auth, async (reg, res) => {
 
 router.get('/',  async (reg, res) => {
         try {
+            let sum
 
             const toors = await Toor.findAll({
               raw: true
             })
+
+            for (let toor of toors) {
+
+                    const users = await User.findAll({
+                        where: {
+                            toorId: toor.id
+                        }
+                    })
+                 sum=0
+
+                    for (let user of users) {
+                        sum+= Number(user.balance)
+                    }
+
+                    toor.turn=sum
+            }
+
+
 
             res.json(toors)
         } catch (e) {
