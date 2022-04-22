@@ -2,7 +2,7 @@
 const env = {
     database: 'bitmex',
     username: 'root',
-    password: '',
+    password: '12345678',
     host: 'localhost',
     dialect: 'mysql',
     pool: {
@@ -16,12 +16,7 @@ const env = {
 
 const Sequelize = require('sequelize');
 
-let password =env.password
-if(process.env.PORT==='production'){
-    password= process.env.PASSWORD
-}
-
-const sequelize = new Sequelize(env.database, env.username, password, {
+const sequelize = new Sequelize(env.database, env.username, env.password, {
     host: env.host,
     dialect: env.dialect,
    // operatorsAliases: false,
