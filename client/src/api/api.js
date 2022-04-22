@@ -63,7 +63,13 @@ export const bitAPI = {
 
 
     create(form) {
-        return  request('/api/user/create', 'POST', {...form})
+        return  request('/api/user/create', 'POST', {...form })
+
+    },
+    update(form, token) {
+        return  request('/api/toor/update', 'POST', {...form}, {
+            Authorization: `Bearer ${token}`
+        })
 
     },
     createTur(form, token) {
@@ -78,6 +84,12 @@ export const bitAPI = {
     },
     deleteToor(id, token) {
         return  request(`/api/toor/${id}`, 'DELETE', null, {
+            Authorization: `Bearer ${token}`
+        })
+
+    },
+    changeStatusToor(id, status, token) {
+        return  request(`/api/toor/status/${id}`, 'PUT', {status}, {
             Authorization: `Bearer ${token}`
         })
 
@@ -104,15 +116,15 @@ export const bitAPI = {
         return  request('/api/user', 'GET', null)
 
     },
-    getAdmin(token) {
-        return  request('/api/user/admin', 'GET', null, {
+    getAdmin(id, token) {
+        return  request(`/api/user/${id}`, 'GET', null, {
             Authorization: `Bearer ${token}`
         } )
 
     },
 
     getLog(token) {
-        return  request('/api/user/log', 'GET', null, {
+        return  request('/api/user/log/get', 'GET', null, {
             Authorization: `Bearer ${token}`
         } )
 

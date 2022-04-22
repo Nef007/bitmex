@@ -1,10 +1,6 @@
 const {Router} = require('express')
-const config = require('config')
-const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
 const router = Router()
-
-const db = require('../config/db.config.js');
+const db = require('../db.config.js');
 const Toor = db.toor;
 const User = db.user;
 const fetch = require('node-fetch');
@@ -13,7 +9,7 @@ const qs = require('qs');
 
 const auth = require('../middleware/auth.middleware')
 
-async function  makeRequest(apiKey, apiSecret, verb, endpoint, data = {})  {
+async function makeRequest(apiKey, apiSecret, verb, endpoint, data = {}) {
     const apiRoot = '/api/v1/';
 
     const expires = Math.round(new Date().getTime() / 1000) + 60; // 1 min in the future
@@ -53,106 +49,164 @@ async function  makeRequest(apiKey, apiSecret, verb, endpoint, data = {})  {
 
     if (!response.ok) {
 
-        throw ({ message: obj.error.message,
-            code: response.status})
+        throw ({
+            message: obj.error.message,
+            code: response.status
+        })
     }
 
     return obj
 }
 
 router.post('/create', auth, async (reg, res) => {
-        try {
+    try {
 
 
-            const {name, balance, ...date} = reg.body
-             let status
+        const {name, balance, ...date} = reg.body
+        let status
 
 
-            const candidate = await Toor.findOne({
-                where:
-                    {
-                        name
-                    },
-                raw: true
-            })
-            if (candidate) {
-                res.status(400).json({message: 'Такой турнир уже существует'})
-            }
-
-            if(new Date(date.date[0])<new Date() &&  new Date(date.date[1])> new Date() ){
-                status="Активный"
-            } else if (new Date(date.date[0])> new Date()) {
-                status="Ожидание"
-            }else status="Завершен"
-
-            await Toor.create({
-                name, balance, start: date.date[0], end: date.date[1], status
-            })
-
-
-            res.status(201).json({message: 'Турнир создан'})
-
-        } catch (e) {
-            console.log(e)
-            res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
+        const candidate = await Toor.findOne({
+            where:
+                {
+                    name
+                },
+            raw: true
+        })
+        if (candidate) {
+            res.status(400).json({message: 'Такой турнир уже существует'})
         }
 
-    })
+        if (new Date(date.date[0]) < new Date() && new Date(date.date[1]) > new Date()) {
+            status = "Активный"
+        } else if (new Date(date.date[0]) > new Date()) {
+            status = "Ожидание"
+        } else status = "Завершен"
 
-router.get('/',  async (reg, res) => {
-        try {
-            let sum
+        await Toor.create({
+            name, balance, start: date.date[0], end: date.date[1], status
+        })
 
-            const toors = await Toor.findAll({
-              raw: true
+
+        res.status(201).json({message: 'Турнир создан'})
+
+    } catch (e) {
+        console.log(e)
+        res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
+    }
+
+})
+
+
+router.post('/update', auth, async (reg, res) => {
+    try {
+
+        const {id, date, ...value} = reg.body
+        await Toor.update({
+            ...value,
+            start: date[0],
+            end: date[1]
+        }, {
+            where:
+                {
+                    id
+                },
+
+        })
+
+
+        res.status(201).json({message: 'Сохранено'})
+
+    } catch (e) {
+        console.log(e)
+        res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
+    }
+
+})
+
+
+router.put('/status/:id', auth, async (reg, res) => {
+    try {
+
+
+        const {status} = reg.body
+        const id = reg.params.id
+
+
+        await Toor.update({status}, {
+            where:
+                {
+                    id
+                },
+        })
+
+        res.status(201).json({message: `Статус изменен на ${status}`})
+
+    } catch (e) {
+        console.log(e)
+        res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
+    }
+
+})
+
+router.get('/', async (reg, res) => {
+    try {
+        let sum
+
+        const toors = await Toor.findAll({
+            raw: true
+        })
+
+        for (let toor of toors) {
+
+            //    const users = await User.findAll({
+            //        where: {
+            //            toorId: toor.id
+            //        }
+            //    })
+            // sum=0
+            //
+            //    for (let user of users) {
+            //        sum+= Number(user.balance)
+            //    }
+            //
+
+            toor.turn = await User.sum('balance', {
+                where: {
+                    toorId: toor.id
+                }
             })
 
-            for (let toor of toors) {
-
-                    const users = await User.findAll({
-                        where: {
-                            toorId: toor.id
-                        }
-                    })
-                 sum=0
-
-                    for (let user of users) {
-                        sum+= Number(user.balance)
-                    }
-
-                    toor.turn=sum
-            }
-
-
-
-            res.json(toors)
-        } catch (e) {
-            console.log(e)
-            res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
         }
 
-    })
+
+        res.json(toors)
+    } catch (e) {
+        console.log(e)
+        res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
+    }
+
+})
 
 router.delete('/:id', auth, async (req, res) => {
-        try {
+    try {
 
-            const id = req.params.id
+        const id = req.params.id
 
-           await Toor.destroy({
-             where:{
-                 id
-             }
-            })
+        await Toor.destroy({
+            where: {
+                id
+            }
+        })
 
 
+        res.status(201).json({message: 'Турнир удален'})
+    } catch (e) {
+        console.log(e)
+        res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
+    }
 
-            res.status(201).json({message: 'Турнир удален'})
-        } catch (e) {
-            console.log(e)
-            res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
-        }
-
-    })
+})
 
 
 module.exports = router

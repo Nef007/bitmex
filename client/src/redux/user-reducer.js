@@ -39,7 +39,7 @@ export const userReducer = (state = initialState, action) => {
 export const setLoadingUser = (isLoading) => ({type: SET_LOADING_USER, isLoading})
 export const setLog= (log) => ({type: SET_LOG, log})
 
-export const registerUser = (form) => async (dispatch) => {
+export const registerUser = (form ) => async (dispatch) => {
     dispatch(deleteMessage());
     try {
         dispatch(setLoadingUser(true))

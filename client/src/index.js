@@ -8,12 +8,16 @@ import reportWebVitals from './reportWebVitals';
 import {Provider} from "react-redux";
 import store from "./redux/redux-store";
 import { LoopCircleLoading } from 'react-loadingg';
+import ru_RU from "antd/lib/locale-provider/ru_RU";
+import {ConfigProvider} from "antd";
 
 
 ReactDOM.render(
     <Provider store={store}>
         <Suspense fallback={ <LoopCircleLoading color="#960000" />}>
+            <ConfigProvider locale={ru_RU}>
         <App/>
+            </ConfigProvider>
         </Suspense>
     </Provider>,
     document.getElementById('root')

@@ -1,14 +1,12 @@
 const {Router} = require('express')
-const config = require('config')
-const shortid = require('shortid')
 const auth = require('../middleware/auth.middleware')
 const router = Router()
-const db = require('../config/db.config.js');
+const db = require('../db.config.js');
 const User = db.user;
 const Toor = db.toor;
 const Log = db.log;
 const { Op } = require("sequelize");
-
+const moment = require('moment')
 const fetch = require('node-fetch');
 const crypto = require('crypto');
 const qs = require('qs');
@@ -72,7 +70,7 @@ router.post('/create', async (req, res) => {
 
         let userBit
 
-        const {toorid, ...user} = req.body
+        const { toorid, ...user} = req.body
 
         const toor = await Toor.findByPk(toorid)
 
@@ -131,38 +129,116 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/admin', auth, async (req, res) => {
+// router.get('/admin', auth, async (req, res) => {
+//     try {
+//
+//
+//         const users = await User.findAll({raw: true})
+//
+//         res.json(users)
+//
+//     } catch (e) {
+//         console.log(e)
+//         res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
+//     }
+// })
+
+
+router.get('/:id', auth, async (req, res) => {
     try {
 
 
-        const users = await User.findAll({raw: true})
+        const id = req.params.id
 
-        for (let user of users) {
-            if (user.status === "Активный") {
+        const user = await User.findByPk(id)
+
+
                 try {
-                    const wallet = await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
-                        {currency: "XBt"}
-                    );
+                    // const wallet = await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
+                    //     {currency: "XBt"}
+                    // );
+                    //
+                    //
+                    // // количество api
+                    // const api = await makeRequest(user.apikey, user.apisecret, 'GET', '/apiKey',
+                    //     {}
+                    // );
+                    //
+                    //
+                    // // в сделке
+                    // const positionBit = await makeRequest(user.apikey, user.apisecret, 'GET', '/position',
+                    //     {reverse: true}
+                    // );
+                    //
+                    //
+                    // ///  трейды  выводить по дате
+                    // const order = await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
+                    //     {reverse: true, startTime: new Date(user.starttoor)}
+                    // );
 
-                    // количество api
-                    const api = await makeRequest(user.apikey, user.apisecret, 'GET', '/apiKey',
-                        {}
-                    );
+                    let wallet = ''
+                    let api = ''
+                    let positionBit = []
+                    let order = ''
 
-                    // в сделке
-                    const positionBit = await makeRequest(user.apikey, user.apisecret, 'GET', '/position',
-                        {reverse: true}
-                    );
-                    ///  трейды  выводить по дате
-                    const order = await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
-                        {reverse: true, startTime: new Date(user.starttoor)}
-                    );
+
+                    const arr = [
+                        await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
+                            {currency: "XBt"}
+                        ),
+                        await makeRequest(user.apikey, user.apisecret, 'GET', '/apiKey',
+                            {}
+                        ),
+                        await makeRequest(user.apikey, user.apisecret, 'GET', '/position',
+                            {reverse: true}
+                        ),
+                        await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
+                            {reverse: true, startTime: new Date(user.starttoor)}
+                        ),
+
+
+                    ]
+
+
+
+                   await Promise.all(arr)
+                        .then(([response1, response2, response3, response4  ]) => {
+
+                            wallet=response1
+                            api=response2
+                            positionBit=response3
+                            order=response4
+                            console.log('Получил данные')
+
+                        })
+                        .catch(error => {
+                            console.log('Ошибка получения данных')
+                           throw error
+                        })
+
+
+
 
 
                     user.balance = parseInt(wallet.amount / 10000)/10000
                     user.trade = order.length
-                    user.transaction = String(positionBit.map(item => `${item.symbol}: ${item.openingQty}/${item.avgEntryPrice}/${item.liquidationPrice}`)  || '')
+                    user.transaction = String(positionBit.filter(item=> item.avgEntryPrice && item.liquidationPrice  ).map(item => `${item.symbol}: ${item.currentQty}/${item.avgEntryPrice}/${item.liquidationPrice}/${item.unrealisedPnl}/${item.markPrice}`)  || '')
                     user.api = api.length
+                    user.comment = `Обновлен: ${moment(new Date).format("HH:mm DD.MM.YYYY")}`
+
+                    await User.update({
+                       // deposit: amount,
+                        balance:  user.balance,
+                        trade:  user.trade,
+                        transaction: user.transaction,
+                        api: user.api,
+                        comment: `Обновлен:`
+
+                    }, {
+                        where: {
+                            id: user.id
+                        }
+                    })
 
                 } catch (e) {
                     if (e.code === 403) {
@@ -170,18 +246,16 @@ router.get('/admin', auth, async (req, res) => {
                         user.trade = "-"
                         user.transaction = ''
                     }
+
                     console.log(e)
+
+                    return  res.status(500).json({message: 'Не могу получить свежие данные'})
+
+
                 }
 
 
-            } else {
-                user.transaction = ''
-            }
-
-
-        }
-
-        res.json(users)
+        res.json(user)
 
     } catch (e) {
         console.log(e)
@@ -256,11 +330,14 @@ router.put('/active/:id', auth, async (req, res) => {
     }
 
 })
-router.get('/log', auth, async (req, res) => {
+router.get('/log/get', auth, async (req, res) => {
     try {
 
 
-      const logs= await Log.findAll({raw: true})
+      const logs= await Log.findAll({
+          order: [['createdAt', 'DESC'] ],
+          raw: true
+      })
 
         res.status(201).json(logs)
 

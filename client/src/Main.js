@@ -35,7 +35,10 @@ function Main(props) {
             <div className="container">
                 <div className="head">
                     <div onClick={event => { history.push('/tournament')}} className='btn'>
-                        Турнир
+                        Турниры
+                    </div>
+                    <div className="title" >
+                        Турниры bitMex
                     </div>
 
                     <div onClick={event => { history.push('/auth')}} className="btn">
@@ -68,7 +71,7 @@ function Main(props) {
         </section>
             <footer>
                 <div>
-                    2021
+                    2021-2022
                 </div>
 
             </footer>
@@ -88,6 +91,8 @@ let mapStateToProps = (state) => {
         intervalToor: state.toorState.intervalToor,
         intervalUser: state.toorState.intervalUser,
         intervalUserAdmin: state.toorState.intervalUserAdmin,
+        loadingToors: state.toorState.loadingToors,
+
 
     }
 

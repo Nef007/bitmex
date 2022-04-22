@@ -183,7 +183,6 @@ export const isEmptyAdmin = () => async (dispatch) => {
 
 }
 
-
 export const initializedApp = () => async (dispatch) => {
 
     let promise = dispatch(auth())

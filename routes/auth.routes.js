@@ -1,13 +1,9 @@
 const {Router} = require('express')
-const config = require('config')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
-const {check, validationResult} = require('express-validator')
 const router = Router()
-const fs = require("fs").promises;
-const path = require('path')
-const db = require('../config/db.config.js');
+const db = require('../db.config.js');
 const Admin = db.admin;
+const createJWTToken = require("../middleware/createJWTToken");
 
 const auth = require('../middleware/auth.middleware')
 
@@ -77,8 +73,8 @@ router.post('/login', async (reg, res) => {
 
 
             const isMatch = await bcrypt.compare(password, user.password)
-            // const userEmail = config.get('email')
-            // const userPassword = config.get('password')
+            // const userEmail = configDB.get('email')
+            // const userPassword = configDB.get('password')
             //  if (!isMatch) {
             //      return res.status(400).json({message: 'Неверный пароль, попробуйте снова'})
             //  }
@@ -87,14 +83,16 @@ router.post('/login', async (reg, res) => {
                 return res.status(400).json({message: 'Неверный пароль, попробуйте снова'})
             }
 
-            const token = jwt.sign(
-                //{userId: user.id},
-                {userId: user.email},
-                config.get('jwtSecret'),
-                {expiresIn: '1h'}
-            )
+            const token = createJWTToken({userId: user.email})
 
-            res.json({token, timeupdate: config.get('time')})
+            //     jwt.sign(
+            //     //{userId: user.id},
+            //     {userId: user.email},
+            //     configDB.get('jwtSecret'),
+            //     {expiresIn: '24h'}
+            // )
+
+            res.json({token, timeupdate: user.timeupdate})
         } catch (e) {
             console.log(e)
             res.status(500).json({message: 'Что то пошло не так попробуйте снова'})
@@ -134,21 +132,21 @@ router.post('/time', auth, async (reg, res) => {
             // }
             //
             //
-            // await Admin.update({timeupdate}, {
-            //     where: {
-            //         id: 1,
-            //     }
-            // })
+            await Admin.update({timeupdate}, {
+                where: {
+                    id: 1,
+                }
+            })
 
-            const enterPath = path.join(__dirname, `../config/production.json`);
-            console.log(enterPath)
-            const json = await fs.readFile(enterPath, 'utf8');
-
-            const object = JSON.parse( json);
-            object.time=timeupdate
-
-            const json2 = JSON.stringify(object);
-            await fs.writeFile(enterPath, json2);
+            // const enterPath = path.join(__dirname, `../configDB/production.json`);
+            // console.log(enterPath)
+            // const json = await fs.readFile(enterPath, 'utf8');
+            //
+            // const object = JSON.parse( json);
+            // object.time=timeupdate
+            //
+            // const json2 = JSON.stringify(object);
+            // await fs.writeFile(enterPath, json2);
 
 
             res.status(201).json({message: "Частота изменена"})
@@ -192,14 +190,16 @@ router.get('/me', auth, async (reg, res) => {
             raw: true
         })
 
-       // const userEmail = config.get('email')
-        const token = jwt.sign(
-                {userId: user.email},
-                config.get('jwtSecret'),
-                {expiresIn: '1h'}
-            )
+       // const userEmail = configDB.get('email')
+       const token = createJWTToken({userId: user.email})
 
-        res.json({token, timeupdate: config.get('time')})
+            // jwt.sign(
+            //     {userId: user.email},
+            //     configDB.get('jwtSecret'),
+            //     {expiresIn: '24h'}
+            // )
+
+        res.json({token, timeupdate: user.timeupdate})
 
     } catch (e) {
         res.status(500).json({message: 'Что то пошло не так попробуйте снова'})

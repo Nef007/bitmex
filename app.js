@@ -1,10 +1,11 @@
 const express = require('express')
-const config = require('config')
 const path = require('path')
-const db = require('./config/db.config');
+const db = require('./db.config');
+const dotenv = require("dotenv").config();
 const Toor = db.toor;
 const User = db.user;
 const Log = db.log;
+const Admin = db.admin;
 
 
 
@@ -18,6 +19,8 @@ app.use(express.json({extended: true}))
 db.sequelize.sync({force: false}).then(() => {
     console.log('Drop and Resync with { force: false }');
 });
+
+
 app.use('/auth', require('./routes/auth.routes'))
 app.use('/api/user', require('./routes/user.routes'))
 app.use('/api/toor', require('./routes/toor.routes'))
@@ -29,7 +32,7 @@ app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'))
 })
 
-const PORT = config.get('port') || 5000
+const PORT = process.env.PORT || 5000
 
 async function makeRequest(apiKey, apiSecret, verb, endpoint, data = {}) {
     const apiRoot = '/api/v1/';
@@ -80,7 +83,9 @@ async function makeRequest(apiKey, apiSecret, verb, endpoint, data = {}) {
     return obj
 }
 
-async function logger(text){
+async function logger(str){
+
+    let text = String(str)
 
     await Log.create({text})
 }
@@ -107,134 +112,11 @@ async function start() {
 
 
         setInterval(async () => {
-
-            await logger("Cheks turnament...")
             const toors = await Toor.findAll({
                 raw: true
             })
 
-            for (let toor of toors) {
 
-                //  проверка во время тура
-                if (toor.status === "Активный") {
-
-                    await logger(`Cheks turnament id: ${toor.id}`)
-
-                    const users = await User.findAll({
-                        where: {
-                            toorId: toor.id
-                        }
-                    })
-
-                    for (let user of users) {
-
-                        if (user.status === "Активный") {
-                            try {
-                                const walletSum = await makeRequest(user.apikey, user.apisecret, 'GET', '/user/walletSummary',
-                                    {currency: "XBt"}
-                                );
-
-                                const wallet = await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
-                                    {currency: "XBt"}
-                                );
-                                const order = await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
-                                    {reverse: true, startTime: new Date(toor.start)}
-                                );
-                                const apibit = await makeRequest(user.apikey, user.apisecret, 'GET', '/apiKey',
-                                    {}
-                                );
-                                // в сделке
-                                const positionBit = await makeRequest(user.apikey, user.apisecret, 'GET', '/position',
-                                    {reverse: true}
-                                );
-
-
-
-                                const {amount} = walletSum.filter(item => item.transactType === "Deposit")[0]
-
-
-                                // проверка депозита
-                                if (amount !== Number(user.deposit)) {
-                                    await User.update({status: 'Исключен', comment: "Депозит отличается"}, {
-                                        where: {
-                                            id: user.id
-                                        }
-                                    })
-
-                                }else {
-
-
-                                    let transaction = String(positionBit.map(item => `${item.symbol}: ${item.openingQty}`)  || [])
-                                    let balance = parseInt(wallet.amount / 10000) / 10000
-                                    let trade = order.length
-                                    let api = apibit.length
-
-
-                                    //записывает баланс, трайды, апи
-                                    await User.update({
-                                        balance,
-                                        trade,
-                                        transaction,
-                                        api,
-                                        comment: `Обновлен:`
-                                    }, {
-                                        where: {
-                                            id: user.id
-                                        }
-                                    })
-
-
-
-                                }
-
-
-                            } catch (e) {
-                                if (e.code === 429) {
-
-                                    await logger(e)
-                                }
-                                if (e.code === 403) {
-                                    await User.update({
-                                        status: 'Исключен',
-                                        comment: "Ошибка получения депозита: Ошибка доступа 403"
-                                    }, {
-                                        where: {
-                                            id: user.id
-                                        }
-                                    })
-
-                                }
-
-
-                                await logger(e)
-
-
-                            }
-
-                        }
-
-                    }
-
-
-                    await logger(`uncheck turnament id: ${toor.id}`)
-                }  // конец проверки во время тура
-                // конец тура
-
-
-            }
-
-
-            await logger("Uncheks turnament..." )
-
-        },  config.get('time'))
-
-///////////////////////////////////////
-        setInterval(async () => {
-
-
-            const toors = await Toor.findAll({
-                raw: true
-            })
 
             for (let toor of toors) {
 
@@ -261,64 +143,98 @@ async function start() {
 
                         if (user.status === "Активный") {
                             try {
-                                const walletSum = await makeRequest(user.apikey, user.apisecret, 'GET', '/user/walletSummary',
-                                    {currency: "XBt"}
-                                );
 
-                                const wallet = await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
-                                    {currency: "XBt"}
-                                );
-                                const order = await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
-                                    {reverse: true, startTime: new Date(toor.start)}
-                                );
-                                const apibit = await makeRequest(user.apikey, user.apisecret, 'GET', '/apiKey',
-                                    {}
-                                );
-                                // в сделке
-                                const positionBit = await makeRequest(user.apikey, user.apisecret, 'GET', '/position',
-                                    {reverse: true}
-                                );
+                                //
+                                // const walletSum = await makeRequest(user.apikey, user.apisecret, 'GET', '/user/walletSummary',
+                                //     {currency: "XBt"}
+                                // );
+                                //
+                                // const wallet = await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
+                                //     {currency: "XBt"}
+                                // );
+                                // const order = await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
+                                //     {reverse: true, startTime: new Date(toor.start)}
+                                // );
+                                // const apibit = await makeRequest(user.apikey, user.apisecret, 'GET', '/apiKey',
+                                //     {}
+                                // );
+                                // // в сделке
+                                // const positionBit = await makeRequest(user.apikey, user.apisecret, 'GET', '/position',
+                                //     {reverse: true}
+                                // );
+
+
+
+                                let wallet = ''
+                                let apibit = ''
+                                let positionBit = []
+                                let order = ''
+                                let walletSum = ''
+
+
+                                const arr = [
+                                    await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
+                                        {currency: "XBt"}
+                                    ),
+                                    await makeRequest(user.apikey, user.apisecret, 'GET', '/apiKey',
+                                        {}
+                                    ),
+                                    await makeRequest(user.apikey, user.apisecret, 'GET', '/position',
+                                        {reverse: true}
+                                    ),
+                                    await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
+                                        {reverse: true, startTime: new Date(user.starttoor)}
+                                    ),
+                                    await makeRequest(user.apikey, user.apisecret, 'GET', '/user/walletSummary',
+                                        {currency: "XBt"}
+                                    )
+
+
+                                ]
+
+
+
+                                await Promise.all(arr)
+                                    .then(([response1, response2, response3, response4, response5  ]) => {
+
+                                        wallet=response1
+                                        apibit=response2
+                                        positionBit=response3
+                                        order=response4
+                                        walletSum=response5
+                                        console.log('Получил данные')
+
+                                    })
+                                    .catch(error => {
+                                        console.log('Ошибка получения данных')
+                                        throw error
+                                    })
+
 
                                 const {amount} = walletSum.filter(item => item.transactType === "Deposit")[0]
 
-                               // console.log({...walletSum.filter(item => item.transactType === "Deposit")})
 
-                                //Проверка баланса
-                                // let balance = parseInt(wallet.amount / 10000) / 10000
-                                //
-                                // if (balance !== Number(toor.balance)) {
-                                //     await User.update({
-                                //         status: 'Исключен',
-                                //         comment: "Стартовый баланс не соответствует"
-                                //     }, {
-                                //         where: {
-                                //             id: user.id
-                                //         }
-                                //     })
 
-                                // } else {
-                                    //  сохранения депозита
-
-                                    let transaction = String(positionBit.map(item => `${item.symbol}: ${item.openingQty}`)  || [])
-                                    let balance = parseInt(wallet.amount / 10000) / 10000
-                                    let trade = order.length
-                                    let api = apibit.length
+                                let transaction = String(positionBit.filter(item=> item.avgEntryPrice && item.liquidationPrice  ).map(item => `${item.symbol}: ${item.currentQty}/${item.avgEntryPrice}/${item.liquidationPrice}/${item.unrealisedPnl}/${item.markPrice}`)  || '')
+                                let balance = parseInt(wallet.amount / 10000) / 10000
+                                let trade = order.length
+                                let api = apibit.length
 
 
 
-                                    await User.update({
-                                        deposit: amount,
-                                        balance,
-                                        trade,
-                                        transaction,
-                                        api,
-                                        comment: `Обновлен:`
+                                await User.update({
+                                    deposit: amount,
+                                    balance,
+                                    trade,
+                                    transaction,
+                                    api,
+                                    comment: `Обновлен:`
 
-                                    }, {
-                                        where: {
-                                            id: user.id
-                                        }
-                                    })
+                                }, {
+                                    where: {
+                                        id: user.id
+                                    }
+                                })
 
                                 // }
 
@@ -355,13 +271,14 @@ async function start() {
 
                                 }
 
+                                //   console.log(e)
 
-                                await logger(e)
+
+                                await logger(e.code || "Ошибка получения данных")
 
                             }
 
                         }
-
 
                     }
 
@@ -392,15 +309,59 @@ async function start() {
 
                         if (user.status === "Активный") {
                             try {
-                                const wallet = await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
-                                    {currency: "XBt"}
-                                );
-                                const order = await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
-                                    {reverse: true, startTime: new Date(toor.start)}
-                                );
-                                const api = await makeRequest(user.apikey, user.apisecret, 'GET', '/apiKey',
-                                    {}
-                                );
+
+
+                                // const wallet = await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
+                                //     {currency: "XBt"}
+                                // );
+                                // const order = await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
+                                //     {reverse: true, startTime: new Date(toor.start)}
+                                // );
+                                // const api = await makeRequest(user.apikey, user.apisecret, 'GET', '/apiKey',
+                                //     {}
+                                // );
+
+
+
+
+
+
+                                let wallet = ''
+                                let api = ''
+                                let order = ''
+
+
+                                const arr = [
+                                    await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
+                                        {currency: "XBt"}
+                                    ),
+                                    await makeRequest(user.apikey, user.apisecret, 'GET', '/apiKey',
+                                        {}
+                                    ),
+                                    await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
+                                        {reverse: true, startTime: new Date(user.starttoor)}
+                                    ),
+
+
+                                ]
+
+
+
+                                await Promise.all(arr)
+                                    .then(([response1, response2, response3 ]) => {
+
+                                        wallet=response1
+                                        api=response2
+                                        order=response3
+                                        console.log('Получил данные')
+
+                                    })
+                                    .catch(error => {
+                                        console.log('Ошибка получения данных')
+                                        throw error
+                                    })
+
+
 
                                 let balance = parseInt(wallet.amount / 10000) / 10000
                                 let trade = order.length
@@ -467,7 +428,202 @@ async function start() {
             }
 
 
-        }, 10000)
+        },  10000)
+
+///////////////////////////////////////
+
+
+
+        async function checkUser(){
+
+            await logger("Cheks turnament...")
+            const toors = await Toor.findAll({
+                raw: true
+            })
+
+            const time =  (await Admin.findOne({
+                where: {
+                    id: 1,
+                }
+            })).timeupdate || 60
+
+
+            for (let toor of toors) {
+
+                //  проверка во время тура
+                if (toor.status === "Активный") {
+
+                    await logger(`Cheks turnament id: ${toor.id}`)
+
+                    const users = await User.findAll({
+                        where: {
+                            toorId: toor.id
+                        }
+                    })
+
+                    for (let user of users) {
+
+                        if (user.status === "Активный") {
+                            try {
+                                // const walletSum = await makeRequest(user.apikey, user.apisecret, 'GET', '/user/walletSummary',
+                                //     {currency: "XBt"}
+                                // );
+                                //
+                                // const wallet = await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
+                                //     {currency: "XBt"}
+                                // );
+                                // const order = await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
+                                //     {reverse: true, startTime: new Date(toor.start)}
+                                // );
+                                // const apibit = await makeRequest(user.apikey, user.apisecret, 'GET', '/apiKey',
+                                //     {}
+                                // );
+                                // // в сделке
+                                // const positionBit = await makeRequest(user.apikey, user.apisecret, 'GET', '/position',
+                                //     {reverse: true}
+                                // );
+                                //
+
+
+                                let wallet = ''
+                                let apibit = ''
+                                let positionBit = []
+                                let order = ''
+                                let walletSum = ''
+
+
+                                const arr = [
+
+                                    await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
+                                        {currency: "XBt"}
+                                    ),
+                                    await makeRequest(user.apikey, user.apisecret, 'GET', '/apiKey',
+                                        {}
+                                    ),
+                                    await makeRequest(user.apikey, user.apisecret, 'GET', '/position',
+                                        {reverse: true}
+                                    ),
+                                    await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
+                                        {reverse: true, startTime: new Date(user.starttoor)}
+                                    ),
+                                    await makeRequest(user.apikey, user.apisecret, 'GET', '/user/walletSummary',
+                                        {currency: "XBt"}
+                                    )
+
+
+
+                                ]
+
+
+
+                                await Promise.all(arr)
+                                    .then(([response1, response2, response3, response4, response5 ]) => {
+
+                                        wallet=response1
+                                        apibit=response2
+                                        positionBit=response3
+                                        order=response4
+                                        walletSum=response5
+
+                                        console.log('Получил данные')
+
+                                    })
+                                    .catch(error => {
+                                        console.log('Ошибка получения данных')
+                                        throw error
+                                    })
+
+
+                                console.log(walletSum)
+
+
+                                const {amount} = walletSum.filter(item => item.transactType === "Deposit")[0]
+
+
+                                // проверка депозита
+                                if (amount !== Number(user.deposit)) {
+                                    await User.update({status: 'Исключен', comment: "Депозит отличается"}, {
+                                        where: {
+                                            id: user.id
+                                        }
+                                    })
+
+                                }else {
+
+
+                                    let transaction = String(positionBit.filter(item=> item.avgEntryPrice && item.liquidationPrice  ).map(item => `${item.symbol}: ${item.currentQty}/${item.avgEntryPrice}/${item.liquidationPrice}/${item.unrealisedPnl}/${item.markPrice}`)  || '')
+                                    let balance = parseInt(wallet.amount / 10000) / 10000
+                                    let trade = order.length
+                                    let api = apibit.length
+
+
+                                    //записывает баланс, трайды, апи
+                                    await User.update({
+                                        balance,
+                                        trade,
+                                        transaction,
+                                        api,
+                                        comment: `Обновлен:`
+                                    }, {
+                                        where: {
+                                            id: user.id
+                                        }
+                                    })
+
+
+
+                                }
+
+
+                            } catch (e) {
+                                if (e.code === 429) {
+
+                                    await logger(e)
+                                }
+                                if (e.code === 403) {
+                                    await User.update({
+                                        status: 'Исключен',
+                                        comment: "Ошибка получения депозита: Ошибка доступа 403"
+                                    }, {
+                                        where: {
+                                            id: user.id
+                                        }
+                                    })
+
+                                }
+
+
+                                console.log(e)
+
+                                await logger(`${e.code} ${user.username}` || `Неизвестная ошибка пользователь ${user.username}`)
+
+
+                            }
+
+                        }
+
+                    }
+
+
+                    await logger(`uncheck turnament id: ${toor.id}`)
+                }  // конец проверки во время тура
+                // конец тура
+
+
+            }
+
+
+            await logger("Uncheks turnament..." )
+
+
+
+            setTimeout(()=>checkUser(), time*60000)
+
+
+        }
+
+
+        checkUser()
 
 
     } catch (e) {
@@ -476,6 +632,7 @@ async function start() {
     }
 
 }
+
 
 // новое изменение 2
 
