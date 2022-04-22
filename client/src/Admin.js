@@ -953,7 +953,9 @@ const Admin = (props) => {
                                                 const botRevers = [];
 
                                                 humans && toor.isRevers &&  humans.map(item=>{
-                                                    item.transaction.split(',').map(tranz=>{
+
+
+                                                    item.transaction &&  item.transaction.split(',').map(tranz=>{
                                                         humansRevers.push({
                                                             tiket: tranz.split(':')[0],
                                                             poz: tranz.split(':')[1].split('/')[0],
@@ -977,7 +979,8 @@ const Admin = (props) => {
                                                 })
 
                                                 bot && toor.isRevers && bot.map(item=>{
-                                                    item.transaction.split(',').map(tranz=>{
+
+                                                    item.transaction &&   item.transaction.split(',').map(tranz=>{
 
                                                         botRevers.push({
                                                             tiket: tranz.split(':')[0],
