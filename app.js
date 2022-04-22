@@ -202,7 +202,7 @@ async function start() {
                                         positionBit=response3
                                         order=response4
                                         walletSum=response5
-                                        console.log('Получил данные')
+
 
                                     })
                                     .catch(error => {
@@ -353,7 +353,7 @@ async function start() {
                                         wallet=response1
                                         api=response2
                                         order=response3
-                                        console.log('Получил данные')
+
 
                                     })
                                     .catch(error => {
@@ -525,7 +525,7 @@ async function start() {
                                         order=response4
                                         walletSum=response5
 
-                                        console.log('Получил данные')
+
 
                                     })
                                     .catch(error => {
