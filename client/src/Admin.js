@@ -564,7 +564,7 @@ const Admin = (props) => {
             title: "Позиция",
             render: (text, row, index) => (
                 <>
-                    {index + 1}
+                    {pageSize+index + 1}
 
                 </>
             )
