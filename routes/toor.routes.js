@@ -154,6 +154,7 @@ router.get('/', async (reg, res) => {
         let sum
 
         const toors = await Toor.findAll({
+            order: [['start', 'DESC'] ],
             raw: true
         })
 

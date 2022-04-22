@@ -120,7 +120,10 @@ router.post('/create', async (req, res) => {
 router.get('/', async (req, res) => {
     try {
 
-        const users = await User.findAll({raw: true})
+        const users = await User.findAll({
+            order: [['balance', 'DESC'] ],
+            raw: true
+        })
         res.json(users)
 
     } catch (e) {

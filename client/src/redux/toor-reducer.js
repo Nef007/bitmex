@@ -56,7 +56,8 @@ export const toorReducer = (state = initialState, action) => {
                 ...state, toors: state.toors.map((toor) => {
                     return {
                         ...toor,
-                        users: action.users.filter(user => user.toorId === toor.id).sort((a, b) => b.balance - a.balance)
+                        users: action.users.filter(user => user.toorId === toor.id)
+                           // .sort((a, b) => b.balance - a.balance)
                     }
 
                 })
@@ -84,7 +85,8 @@ export const toorReducer = (state = initialState, action) => {
         case SET_TOOR:
             return {
                 ...state,
-                toors: action.toors.sort((a, b) => new Date(b.start) - new Date(a.start)).map((toor, index) => {
+                toors: action.toors.map((toor, index) => {
+                    //.sort((a, b) => new Date(b.start) - new Date(a.start))
                     return {...toor, key: index, isRevers: false}
                 }),
                 arr: findActive(action.toors.sort((a, b) => new Date(b.start) - new Date(a.start)))
