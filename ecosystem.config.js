@@ -2,15 +2,15 @@ module.exports = {
   apps : [{
     name   : "app",
     script : "./app.js",
-    max_memory_restart: '3G',
-    instances: 3,
-    exec_mode: 'cluster',
+   // max_memory_restart: '3G',
+  //  instances: 3,
+   // exec_mode: 'cluster',
     out_file: "../out.log",
     error_file: "../error.log",
     max_restart: 10,
     autorestart: true,
     restart_delay: 4000,
-    wait_ready: true,
+  //  wait_ready: true,
 
 
     env: {
@@ -28,7 +28,7 @@ module.exports = {
       repo : "https://github.com/Nef007/bitmex.git",
       ref  : "origin/master",
       path : "/home/bitmex",
-      'post-deploy' : " npm run client:build && pm2 startOrRestart ecosystem.config.js",
+      'post-deploy' : " pm2 startOrRestart ecosystem.config.js",
       env: {
         NODE_ENV: "production",
       }
