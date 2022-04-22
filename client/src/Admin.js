@@ -108,9 +108,10 @@ const Admin = (props) => {
         setActive()
 
     };
-    const onChangeTable = ({pagination}) => {
+    const onChangeTable = (pagination) => {
+        console.log(pagination)
 
-        setPageSize((pagination.pageSize-1)*pagination.total)
+        setPageSize((pagination.current-1)*pagination.pageSize)
     };
 
     const onFinish = (values) => {
@@ -1027,7 +1028,7 @@ const Admin = (props) => {
                                                             dataSource={toor.isRevers ? humansRevers : humans}
                                                                loading={loading}
                                                                columns={ toor.isRevers ? subcolumnsRevers :subcolumns}
-                                                            onChange={(e)=>onChangeTable(e)}
+                                                            onChange={onChangeTable}
                                                         >
 
                                                         </Table>
@@ -1038,7 +1039,7 @@ const Admin = (props) => {
                                                             dataSource={toor.isRevers ? botRevers : bot}
                                                                loading={loading}
                                                             columns={ toor.isRevers ? subcolumnsRevers :subcolumns}
-                                                            onChange={(e)=>onChangeTable(e)}
+                                                            onChange={onChangeTable}
                                                         >
                                                         </Table>
 

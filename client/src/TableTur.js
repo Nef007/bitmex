@@ -33,9 +33,11 @@ export const TableTur = (props) => {
 
     const [pageSize, setPageSize] = useState(0)
 
-    const onChangeTable = ({pagination}) => {
+    const onChangeTable = (pagination) => {
 
-        setPageSize((pagination.pageSize-1)*pagination.total)
+        console.log(pagination)
+
+        setPageSize((pagination.current-1)*pagination.pageSize)
     };
     const onUpdate = () => {
         getUser()
@@ -327,7 +329,7 @@ export const TableTur = (props) => {
                                     <Table dataSource={humans}
                                            loading={loading}
                                            columns={ subcolumns}
-                                           onChange={(e)=>onChangeTable(e)}
+                                           onChange={onChangeTable}
                                     >
 
 
@@ -337,7 +339,7 @@ export const TableTur = (props) => {
                                     <Table dataSource={bot}
                                            loading={loading}
                                            columns={subcolumns}
-                                           onChange={(e)=>onChangeTable(e)}
+                                           onChange={onChangeTable}
                                     >
 
                                     </Table>
