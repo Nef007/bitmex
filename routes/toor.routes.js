@@ -172,11 +172,11 @@ router.get('/', async (reg, res) => {
             //    }
             //
 
-            toor.turn = await User.sum('balance', {
+            toor.turn = (await User.sum('balance', {
                 where: {
                     toorId: toor.id
                 }
-            })
+            })).toFixed(4)
 
         }
 
