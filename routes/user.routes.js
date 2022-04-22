@@ -100,8 +100,8 @@ router.post('/create', async (req, res) => {
             return res.status(400).json({message: `Пользователь уже существует в этом турнире`})
         }
 
-        if(new Date(toor.start)<new Date()){
-            return res.status(400).json({message: `Регистрация невозможна! турнир уже начался`})
+        if(toor.status==="Активный" || toor.status==="Завершен" ){
+            return res.status(400).json({message: `Регистрация невозможна! турнир уже начался или завершен`})
         }
 
 
