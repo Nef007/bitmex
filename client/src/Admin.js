@@ -1098,7 +1098,7 @@ const Admin = (props) => {
 
                                 >
                                     <Form.Item
-                                        label="Частота(minute)"
+                                        label="Частота(минуты)"
                                         name="timeupdate"
                                         rules={[{required: true, message: 'Введите время!'}]}
                                     >
@@ -1106,8 +1106,8 @@ const Admin = (props) => {
 
                                     </Form.Item>
                                     <div className="center">
-                                        <div>1h = 60m</div>
-                                        <div>1day = 1440m</div>
+                                        <div>1 час = 60 минут</div>
+                                        <div>1 день = 1440 минут</div>
                                     </div>
 
 
