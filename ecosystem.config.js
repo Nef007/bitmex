@@ -28,7 +28,7 @@ module.exports = {
       repo : "https://github.com/Nef007/bitmex.git",
       ref  : "origin/master",
       path : "/home/bitmex",
-      'post-deploy' : " npm run client:build && pm2 startOrRestart ecosystem.configDB.js",
+      'post-deploy' : " npm run client:build && pm2 startOrRestart ecosystem.config.js",
       env: {
         NODE_ENV: "production",
       }
