@@ -537,7 +537,7 @@ async function start() {
 
 
 
-                                const {amount} = walletSum.filter(item => item.transactType === "Deposit")[0] || 0
+                                const {amount} = walletSum.filter(item => item.transactType === "Deposit")[0] || -2
 
 
                                 // проверка депозита
