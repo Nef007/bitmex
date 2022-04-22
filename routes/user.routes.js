@@ -211,7 +211,7 @@ router.get('/:id', auth, async (req, res) => {
                             api=response2
                             positionBit=response3
                             order=response4
-                            console.log('Получил данные')
+
 
                         })
                         .catch(error => {
