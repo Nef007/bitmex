@@ -78,11 +78,14 @@ const Admin = (props) => {
     const [active, setActive] = useToggle(false)
    // const [revers, setRevers] = useToggle(false)
     const [activeAddUser, setActiveAddUser] = useToggle(false)
+    const [pageSize, setPageSize] = useState(0)
 
 
 
 
     const [form] = Form.useForm();
+
+
 
     const onEdit = async (id) => {
         //await servers.getServer(id)
@@ -104,6 +107,10 @@ const Admin = (props) => {
         form.resetFields();
         setActive()
 
+    };
+    const onChangeTable = ({pagination}) => {
+
+        setPageSize((pagination.pageSize-1)*pagination.total)
     };
 
     const onFinish = (values) => {
@@ -404,7 +411,7 @@ const Admin = (props) => {
             title: "Позиция",
             render: (text, row, index) => (
                 <>
-                    {index + 1}
+                    {pageSize+index + 1}
 
                 </>
             )
@@ -1020,6 +1027,7 @@ const Admin = (props) => {
                                                             dataSource={toor.isRevers ? humansRevers : humans}
                                                                loading={loading}
                                                                columns={ toor.isRevers ? subcolumnsRevers :subcolumns}
+                                                            onChange={(e)=>onChangeTable(e)}
                                                         >
 
                                                         </Table>
@@ -1030,6 +1038,7 @@ const Admin = (props) => {
                                                             dataSource={toor.isRevers ? botRevers : bot}
                                                                loading={loading}
                                                             columns={ toor.isRevers ? subcolumnsRevers :subcolumns}
+                                                            onChange={(e)=>onChangeTable(e)}
                                                         >
                                                         </Table>
 
