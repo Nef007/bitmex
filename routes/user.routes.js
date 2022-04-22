@@ -70,7 +70,7 @@ router.post('/create', async (req, res) => {
 
         let userBit
 
-        const { toorid, ...user} = req.body
+        const { isAdmin, toorid, ...user} = req.body
 
         const toor = await Toor.findByPk(toorid)
 
@@ -100,9 +100,13 @@ router.post('/create', async (req, res) => {
             return res.status(400).json({message: `Пользователь уже существует в этом турнире`})
         }
 
-        if(toor.status==="Активный" || toor.status==="Завершен" ){
-            return res.status(400).json({message: `Регистрация невозможна! турнир уже начался или завершен`})
+        if(!isAdmin){
+            if(toor.status==="Активный" || toor.status==="Завершен" ){
+                return res.status(400).json({message: `Регистрация невозможна! турнир уже начался или завершен`})
+            }
         }
+
+
 
 
         toor.createUser({...user, starttoor: toor.start, idbitmex: userBit.id})

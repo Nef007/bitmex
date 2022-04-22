@@ -107,7 +107,7 @@ const Admin = (props) => {
     };
 
     const onFinish = (values) => {
-        registerUser(values);
+        registerUser(values, true);
     };
 
     const onUpdate = () => {

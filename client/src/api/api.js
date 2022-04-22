@@ -62,8 +62,8 @@ export const authAPI = {
 export const bitAPI = {
 
 
-    create(form) {
-        return  request('/api/user/create', 'POST', {...form })
+    create(form, isAdmin) {
+        return  request('/api/user/create', 'POST', {...form, isAdmin })
 
     },
     update(form, token) {
