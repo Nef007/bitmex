@@ -359,7 +359,7 @@ const Admin = (props) => {
                         {record.status === "Активный" ? <Tooltip title="Пауза">
 
                                 <Button shape="circle"
-                                      onClick={() => changeStatusToor(record.id, "Ожидание")}
+                                      onClick={() => changeStatusToor(record.id, "Пауза")}
                                         icon={<PauseOutlined/>}
                                         size="small"/>
                             </Tooltip> :
