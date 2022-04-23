@@ -902,7 +902,7 @@ const Admin = (props) => {
                                             rules={[{ required: true, message: 'Выберите категорию!' }]}
                                         >
                                             <Select placeholder="Выбрать">
-                                                {toors.map(toor=> { if( toor.status==='Ожидание'){
+                                                {toors.map(toor=> { if( toor.status==='Ожидание' || toor.status==='Пауза'){
                                                     return  <Option value={toor.id}>{toor.name}</Option>
                                                 }  })}
 
