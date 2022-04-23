@@ -28,7 +28,7 @@ export const TableTur = (props) => {
         await getToors()
         getUser()
 
-    }, [getToors, getUser])
+    }, [])
 
 
     const [pageSize, setPageSize] = useState(0)

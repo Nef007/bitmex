@@ -1,14 +1,19 @@
 
 import * as React from 'react';
 import {Button, Form, Input, Select} from "antd";
+import {useEffect} from "react";
 const {Option} = Select;
 
 
 export const AuthClient = (props) => {
 
     const {
-        registerUser, toors, loadingUser
+        registerUser, toors, loadingUser, getToors
     } = props
+
+    useEffect(async () => {
+        await getToors()
+    }, [])
 
     const onFinish = (values) => {
         registerUser(values);
@@ -49,7 +54,7 @@ export const AuthClient = (props) => {
                     rules={[{ required: true, message: 'Выберите категорию!' }]}
                 >
                     <Select placeholder="Выбрать">
-                        {toors.map(toor=> { if( toor.status==='Ожидание'){
+                        {toors.map(toor=> { if( toor.status==='Ожидание' || toor.status==='Пауза' ){
                             return  <Option value={toor.id}>{toor.name}</Option>
                         }  })}
 
