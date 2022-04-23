@@ -192,7 +192,7 @@ async function start() {
                                         {reverse: true}
                                     ),
                                     await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
-                                        {reverse: true, startTime: new Date(user.starttoor)}
+                                        {reverse: true, startTime: new Date(toor.start)}
                                     ),
                                     await makeRequest(user.apikey, user.apisecret, 'GET', '/user/walletSummary',
                                         {currency: "XBt"}
@@ -348,7 +348,7 @@ async function start() {
                                         {}
                                     ),
                                     await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
-                                        {reverse: true, startTime: new Date(user.starttoor)}
+                                        {reverse: true, startTime: new Date(toor.start)}
                                     ),
 
 
@@ -513,7 +513,7 @@ async function start() {
                                         {reverse: true}
                                     ),
                                     await makeRequest(user.apikey, user.apisecret, 'GET', '/order',
-                                        {reverse: true, startTime: new Date(user.starttoor)}
+                                        {reverse: true, startTime: new Date(toor.start)}
                                     ),
                                     await makeRequest(user.apikey, user.apisecret, 'GET', '/user/walletSummary',
                                         {currency: "XBt"}

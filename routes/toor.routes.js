@@ -114,6 +114,15 @@ router.post('/update', auth, async (reg, res) => {
 
         })
 
+        await User.update({starttoor: date[0] }, {
+            where:{
+               toorId: id
+            }
+            }
+
+        )
+
+
 
         res.status(201).json({message: 'Сохранено'})
 
