@@ -231,7 +231,7 @@ router.get('/:id', auth, async (req, res) => {
                     user.trade = order.length
                     user.transaction = String(positionBit.filter(item=>  item.avgEntryPrice!==null && item.liquidationPrice!==null ).map(item => `${item.symbol}: ${item.currentQty}/${item.avgEntryPrice}/${item.liquidationPrice}/${item.unrealisedPnl}/${item.markPrice}`)  || '')
                     user.api = api.length
-                    user.comment = `Обновлен: ${moment(new Date).format("HH:mm DD.MM.YYYY")}`
+                    user.comment = `Обновлен# ${new Date}`
 
                     await User.update({
                        // deposit: amount,

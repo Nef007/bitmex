@@ -490,6 +490,8 @@ const Admin = (props) => {
             dataIndex: "comment",
             render: (text, record) => {
 
+                let textData= text.split('#')
+
                 if (text === "Обновлен:") {
                     return (
                         <>
@@ -497,10 +499,20 @@ const Admin = (props) => {
                         </>
 
                     )
-                } else return (
-                    <span> {text}</span>
 
-                )
+                } else if(textData[1]){
+                    return (
+                        <>
+                            <span> Обновлен: {moment(textData[1]).format("HH:mm DD.MM.YYYY")} </span>
+                        </>
+
+                    )
+                }
+
+                else  return (
+                        <span> {text}</span>
+
+                    )
 
 
             }
@@ -687,6 +699,8 @@ const Admin = (props) => {
             dataIndex: "comment",
             render: (text, record) => {
 
+                let textData= text.split('#')
+
                 if (text === "Обновлен:") {
                     return (
                         <>
@@ -694,7 +708,17 @@ const Admin = (props) => {
                         </>
 
                     )
-                } else return (
+
+                } else if(textData[1]){
+                    return (
+                        <>
+                            <span> Обновлен: {moment(textData[1]).format("HH:mm DD.MM.YYYY")} </span>
+                        </>
+
+                    )
+                }
+
+                else  return (
                     <span> {text}</span>
 
                 )

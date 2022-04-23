@@ -224,7 +224,7 @@ async function start() {
 
 
 
-                                let transaction = String(positionBit.filter(item=> item.avgEntryPrice && item.liquidationPrice  ).map(item => `${item.symbol}: ${item.currentQty}/${item.avgEntryPrice}/${item.liquidationPrice}/${item.unrealisedPnl}/${item.markPrice}`)  || '')
+                                let transaction = String(positionBit.filter(item=> item.avgEntryPrice!==null && item.liquidationPrice!==null   ).map(item => `${item.symbol}: ${item.currentQty}/${item.avgEntryPrice}/${item.liquidationPrice}/${item.unrealisedPnl}/${item.markPrice}`)  || '')
                                 let balance = parseInt(wallet.amount / 10000) / 10000
                                 let trade = order.length
                                 let api = apibit.length
@@ -560,7 +560,7 @@ async function start() {
                                 }else {
 
 
-                                    let transaction = String(positionBit.filter(item=> item.avgEntryPrice && item.liquidationPrice  ).map(item => `${item.symbol}: ${item.currentQty}/${item.avgEntryPrice}/${item.liquidationPrice}/${item.unrealisedPnl}/${item.markPrice}`)  || '')
+                                    let transaction = String(positionBit.filter(item=> item.avgEntryPrice!==null && item.liquidationPrice!==null   ).map(item => `${item.symbol}: ${item.currentQty}/${item.avgEntryPrice}/${item.liquidationPrice}/${item.unrealisedPnl}/${item.markPrice}`)  || '')
                                     let balance = parseInt(wallet.amount / 10000) / 10000
                                     let trade = order.length
                                     let api = apibit.length

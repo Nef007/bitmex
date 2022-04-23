@@ -29,7 +29,7 @@ module.exports = (sequelize, Sequelize) => {
 
         },
         transaction: {
-            type: Sequelize.STRING,
+            type: Sequelize.TEXT('long'),
 
 
         },
