@@ -120,6 +120,15 @@ async function start() {
 
             for (let toor of toors) {
 
+                if (new Date(toor.start) > new Date()) {
+                    await Toor.update({status: 'Ожидание'}, {
+                        where: {
+                            id: toor.id
+                        }
+                    })
+
+                }
+
                 // начало тура
                 if (new Date(toor.start) <= new Date() && toor.status === "Ожидание") {
 
