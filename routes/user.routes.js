@@ -229,7 +229,7 @@ router.get('/:id', auth, async (req, res) => {
 
                     user.balance = parseInt(wallet.amount / 10000)/10000
                     user.trade = order.length
-                    user.transaction = String(positionBit.filter(item=> item.avgEntryPrice && item.liquidationPrice  ).map(item => `${item.symbol}: ${item.currentQty}/${item.avgEntryPrice}/${item.liquidationPrice}/${item.unrealisedPnl}/${item.markPrice}`)  || '')
+                    user.transaction = String(positionBit.filter(item=>  item.avgEntryPrice!==null && item.liquidationPrice!==null ).map(item => `${item.symbol}: ${item.currentQty}/${item.avgEntryPrice}/${item.liquidationPrice}/${item.unrealisedPnl}/${item.markPrice}`)  || '')
                     user.api = api.length
                     user.comment = `Обновлен: ${moment(new Date).format("HH:mm DD.MM.YYYY")}`
 
