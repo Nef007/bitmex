@@ -113,6 +113,11 @@ const Admin = (props) => {
 
         setPageSize((pagination.current-1)*pagination.pageSize)
     };
+  const onExpandTable = (expanded, record) => {
+        console.log(expanded)
+        console.log(record)
+
+    };
 
     const onFinish = (values) => {
         registerUser(values, true);
@@ -426,6 +431,10 @@ const Admin = (props) => {
 
 
         }, {
+            title: "Депозит",
+            dataIndex: "deposit",
+        },
+        {
             title: "Текущий депозит",
             dataIndex: "balance",
         },
@@ -590,6 +599,7 @@ const Admin = (props) => {
 
 
         },
+
         {
             title: "Текущий депозит",
             dataIndex: "balance",
@@ -975,6 +985,7 @@ const Admin = (props) => {
                                             scroll={{x: 700}}
                                             loading={loadingToors}
                                                expandable={{
+                                                   onExpand : onExpandTable,
                                             expandedRowRender: toor => {
                                                 const humans = toor.users && toor.users.filter(user => user.category === "humans")
                                                 const bot = toor.users && toor.users.filter(user => user.category === "bot")
