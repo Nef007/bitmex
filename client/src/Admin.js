@@ -499,7 +499,9 @@ const Admin = (props) => {
             dataIndex: "comment",
             render: (text, record) => {
 
-                let textData= text.split('#')
+
+
+                let textData= text?.split('#') || ""
 
                 if (text === "Обновлен:") {
                     return (

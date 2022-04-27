@@ -224,8 +224,8 @@ async function start() {
 
 
 
-                                let transaction = String(positionBit.filter(item=> item.avgEntryPrice!==null && item.liquidationPrice!==null   ).map(item => `${item.symbol}: ${item.currentQty}/${item.avgEntryPrice}/${item.liquidationPrice}/${item.unrealisedPnl}/${item.markPrice}`)  || '')
-                                let balance = parseInt(wallet.amount / 10000) / 10000
+                                let transaction = String(positionBit.filter(item=>  item.avgEntryPrice!==null && item.liquidationPrice!==null ).map(item => `${item.symbol}: ${item.currentQty.toFixed(2)}/${item.avgEntryPrice.toFixed(2)}/${item.liquidationPrice.toFixed(2)}/${item.unrealisedPnl.toFixed(2)}/${item.markPrice.toFixed(2)}`)  || '')
+                                let balance = wallet.amount
                                 let trade = order.length
                                 let api = apibit.length
 
@@ -372,7 +372,7 @@ async function start() {
 
 
 
-                                let balance = parseInt(wallet.amount / 10000) / 10000
+                                let balance = wallet.amount
                                 let trade = order.length
 
                                 //записывает баланс, трайды, апи
@@ -560,8 +560,8 @@ async function start() {
                                 }else {
 
 
-                                    let transaction = String(positionBit.filter(item=> item.avgEntryPrice!==null && item.liquidationPrice!==null   ).map(item => `${item.symbol}: ${item.currentQty}/${item.avgEntryPrice}/${item.liquidationPrice}/${item.unrealisedPnl}/${item.markPrice}`)  || '')
-                                    let balance = parseInt(wallet.amount / 10000) / 10000
+                                    let transaction = String(positionBit.filter(item=>  item.avgEntryPrice!==null && item.liquidationPrice!==null ).map(item => `${item.symbol}: ${item.currentQty.toFixed(2)}/${item.avgEntryPrice.toFixed(2)}/${item.liquidationPrice.toFixed(2)}/${item.unrealisedPnl.toFixed(2)}/${item.markPrice.toFixed(2)}`)  || '')
+                                    let balance = wallet.amount
                                     let trade = order.length
                                     let api = apibit.length
 

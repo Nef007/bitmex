@@ -190,6 +190,9 @@ router.get('/:id', auth, async (req, res) => {
 
 
                     const arr = [
+                        // await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
+                        //     {currency: "XBt"}
+                        // ),
                         await makeRequest(user.apikey, user.apisecret, 'GET', '/user/wallet',
                             {currency: "XBt"}
                         ),
@@ -212,6 +215,7 @@ router.get('/:id', auth, async (req, res) => {
                         .then(([response1, response2, response3, response4  ]) => {
 
                             wallet=response1
+                            console.log(wallet)
                             api=response2
                             positionBit=response3
                             order=response4
@@ -227,9 +231,9 @@ router.get('/:id', auth, async (req, res) => {
 
 
 
-                    user.balance = parseInt(wallet.amount / 10000)/10000
+                    user.balance = wallet.amount
                     user.trade = order.length
-                    user.transaction = String(positionBit.filter(item=>  item.avgEntryPrice!==null && item.liquidationPrice!==null ).map(item => `${item.symbol}: ${item.currentQty}/${item.avgEntryPrice}/${item.liquidationPrice}/${item.unrealisedPnl}/${item.markPrice}`)  || '')
+                    user.transaction = String(positionBit.filter(item=>  item.avgEntryPrice!==null && item.liquidationPrice!==null ).map(item => `${item.symbol}: ${item.currentQty.toFixed(2)}/${item.avgEntryPrice.toFixed(2)}/${item.liquidationPrice.toFixed(2)}/${item.unrealisedPnl.toFixed(2)}/${item.markPrice.toFixed(2)}`)  || '')
                     user.api = api.length
                     user.comment = `Обновлен# ${new Date}`
 
