@@ -437,6 +437,8 @@ const Admin = (props) => {
         {
             title: "Текущий депозит",
             dataIndex: "balance",
+            defaultSortOrder: 'descend',
+            sorter: (a, b) => +a.balance - +b.balance,
         },
         {
             title: "Тикет/позиции/откр./ликвид./PNL",
@@ -605,6 +607,7 @@ const Admin = (props) => {
         {
             title: "Текущий депозит",
             dataIndex: "balance",
+            defaultSortOrder: 'descend',
             sorter: (a, b) => +a.balance - +b.balance,
         }, {
             title: "Тикет",
